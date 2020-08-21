@@ -4,41 +4,45 @@ from todo_app.data import trello_items as trello
 from todo_app.flask_config import Config
 from todo_app.view_model import ViewModel
 
-app = Flask(__name__)
-app.config.from_object(Config)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
 
 
-@app.route('/')
-def index():
-    items = trello.get_items()
-    view_model_items = ViewModel(items)
-    return render_template('index.html', items = view_model_items)
+    @app.route('/')
+    def index():
+        items = trello.get_items()
+        view_model_items = ViewModel(items)
+        return render_template('index.html', items = view_model_items)
 
 
-@app.route('/items/new', methods=['POST'])
-def add_item():
-    name = request.form['name']
-    trello.add_item(name)
-    return redirect(url_for('index'))
+    @app.route('/items/new', methods=['POST'])
+    def add_item():
+        name = request.form['name']
+        trello.add_item(name)
+        return redirect(url_for('index'))
 
 
-@app.route('/items/<id>/start')
-def start_item(id):
-    trello.start_item(id)
-    return redirect(url_for('index')) 
+    @app.route('/items/<id>/start')
+    def start_item(id):
+        trello.start_item(id)
+        return redirect(url_for('index')) 
 
 
-@app.route('/items/<id>/complete')
-def complete_item(id):
-    trello.complete_item(id)
-    return redirect(url_for('index'))
+    @app.route('/items/<id>/complete')
+    def complete_item(id):
+        trello.complete_item(id)
+        return redirect(url_for('index'))
 
 
-@app.route('/items/<id>/uncomplete')
-def uncomplete_item(id):
-    trello.uncomplete_item(id)
-    return redirect(url_for('index')) 
+    @app.route('/items/<id>/uncomplete')
+    def uncomplete_item(id):
+        trello.uncomplete_item(id)
+        return redirect(url_for('index')) 
 
 
-if __name__ == '__main__':
-    app.run()
+    if __name__ == '__main__':
+        app.run()
+    
+    return app
+    
