@@ -32,6 +32,7 @@ $ cp .env.template .env  # (first time only)
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.
 
+
 ## Running the App
 
 Once the all dependencies have been installed, start the Flask app in development mode within the poetry environment by running:
@@ -50,3 +51,15 @@ You should see output similar to the following:
  * Debugger PIN: 226-556-590
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
+
+
+## Testing
+
+The end to end tests require you have the firefox browser installed and that you download the corresponding version of the Geckodriver (check version compatability [`here`](https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html)):
+* Download and install firefox from [`here`](https://www.mozilla.org/en-US/firefox/download/)
+* Download Geckodriver from [`here`](https://github.com/mozilla/geckodriver/releases) and add the executable file to the root of the project.
+
+Once the test setup requirments are completed, execute the tests by running:
+```bash
+$ poetry run pytest
+```
