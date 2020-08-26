@@ -20,6 +20,7 @@
   {% else %}
     <a href="{{ url_for('complete_item', id=item.id) }}" class="btn btn-sm btn-primary">Complete</a>
   {% endif %}
+  <a href="{{ url_for('delete_item', id=item.id) }}" class="btn btn-sm btn-danger">Delete</a>
 </li>
 {%- endmacro %}
 
@@ -40,7 +41,7 @@
             <input type="text" name="name" id="name-input" class="form-control" placeholder="Name" aria-label="Name">
           </div>
           <div class="col-auto">
-            <button type="submit" class="btn btn-success">Add Item</button>
+            <button id="add-new-task-button" type="submit" class="btn btn-success">Add Item</button>
           </div>
         </div>
       </form>
