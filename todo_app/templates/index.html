@@ -20,6 +20,7 @@
   {% else %}
     <a href="{{ url_for('complete_item', id=item.id) }}" class="btn btn-sm btn-primary">Complete</a>
   {% endif %}
+  <a href="{{ url_for('delete_item', id=item.id) }}" class="btn btn-sm btn-danger">Delete</a>
 </li>
 {%- endmacro %}
 
@@ -40,7 +41,7 @@
             <input type="text" name="name" id="name-input" class="form-control" placeholder="Name" aria-label="Name">
           </div>
           <div class="col-auto">
-            <button type="submit" class="btn btn-success">Add Item</button>
+            <button id="add-new-task-button" type="submit" class="btn btn-success">Add Item</button>
           </div>
         </div>
       </form>
@@ -49,11 +50,45 @@
 
   <div class="row">
     <div class="col-md-12">
-      <h2>Items</h2>
+      <h2>To do</h2>
       <ul class="list-group mb-4">
-        {% for item in items %}
+        {% for item in items.to_do_items %}
           {{ display_item(item) }}
         {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Doing</h2>
+      <ul class="list-group mb-4">
+        {% for item in items.doing_items %}
+          {{ display_item(item) }}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <h2>Done</h2>
+      <ul class="list-group mb-4">
+        {% if items.done_items_count > 5 %}
+          {% for item in items.recent_done_items %}
+            {{ display_item(item) }}
+          {% endfor %}
+          <details>
+            <summary>Show Older</summary>
+            {% for item in items.older_done_items %}
+              {{ display_item(item) }}
+            {% endfor %}
+          </details>
+        {% else %}
+          {% for item in items.all_done_items %}
+            {{ display_item(item) }}
+          {% endfor %}
+        {% endif %}
       </ul>
     </div>
   </div>

@@ -1,13 +1,14 @@
+from os import environ
 from todo_item import Item
 import requests
 from flask import current_app as app
 
 
 def get_auth_params():
-    return { 'key': app.config['TRELLO_API_KEY'], 'token': app.config['TRELLO_API_SECRET'] }
+    return { 'key': environ.get('TRELLO_API_KEY'), 'token': environ.get('TRELLO_API_SECRET') }
 
 def build_url(endpoint):
-    return app.config['TRELLO_BASE_URL'] + endpoint
+    return 'https://api.trello.com/1' + endpoint
 
 def build_params(params = {}):
     full_params = get_auth_params()
@@ -45,6 +46,27 @@ def get_board(name):
     return next((board for board in boards if board['name'] == name), None)
 
 
+def create_board(name):
+    params = build_params({ 'name': name })
+    url = build_url('/boards/')
+    response = requests.post(url, params=params)
+    board = response.json()
+    board_id = board['id']
+
+    create_list('To Do', board_id)
+    create_list('Doing', board_id)
+    create_list('Done', board_id)
+
+    return board_id
+
+
+def delete_board(id):
+    params = build_params()
+    url = build_url(f'/boards/{id}')
+    requests.delete(url, params=params)
+    return
+
+
 def get_lists():
     """
     Fetches all lists for the default Trello board.
@@ -53,7 +75,7 @@ def get_lists():
         list: The list of Trello lists.
     """
     params = build_params({ 'cards': 'open' }) # Only return cards that have not been archived
-    url = build_url('/boards/%s/lists' % app.config['TRELLO_BOARD_ID'])
+    url = build_url('/boards/%s/lists' % environ.get('TRELLO_BOARD_ID'))
 
     response = requests.get(url, params = params)
     lists = response.json()
@@ -73,6 +95,14 @@ def get_list(name):
     """
     lists = get_lists()
     return next((list for list in lists if list['name'] == name), None)
+
+
+def create_list(name, board_id):
+    params = build_params({ 'name': name, 'idBoard': board_id })
+    url = build_url('/lists')
+
+    requests.post(url, params=params)
+    return
 
 
 def get_items():
@@ -173,6 +203,12 @@ def uncomplete_item(id):
     card = move_card_to_list(id, todo_list)
 
     return Item.fromTrelloCard(card, todo_list)
+
+def delete_item(id):
+    params = build_params()
+    url = build_url(f'/cards/{id}')
+    requests.delete(url, params=params)  
+    return
 
 
 def move_card_to_list(card_id, list):
