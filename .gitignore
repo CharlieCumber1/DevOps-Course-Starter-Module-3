@@ -122,3 +122,6 @@ env/
 ### Geckodriver for selenium webdriver ###
 geckodriver.log
 geckodriver.exe
+
+### vagrant
+.vagrant
