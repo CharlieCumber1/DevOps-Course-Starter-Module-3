@@ -2,29 +2,12 @@
 
 ## System Requirements
 
-The project uses poetry for Python to create an isolated environment and manage package dependencies. To prepare your system, ensure you have an official distribution of Python version 3.7+ and install poetry using one of the following commands (as instructed by the [poetry documentation](https://python-poetry.org/docs/#system-requirements)):
+The project uses vagrant to create an isolated application environment within a virtual machine. To prepare your system, ensure you have an official distribution of Python version 3.7+ and install vagrant by following the [instructions here]('https://learn.hashicorp.com/tutorials/vagrant/getting-started-install). Addtitionaly you will need a provider such as [VirtualBox]('https://www.virtualbox.org/) or [Hyper-V]('https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v) installed.
 
-### Poetry installation (Bash)
+## Configuration
 
-```bash
-curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-```
 
-### Poetry installation (PowerShell)
-
-```powershell
-(Invoke-WebRequest -Uri https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py -UseBasicParsing).Content | python
-```
-
-## Dependencies
-
-The project uses a virtual environment to isolate package dependencies. To create the virtual environment and install required packages, run the following from your preferred shell:
-
-```bash
-$ poetry install
-```
-
-You'll also need to clone a new `.env` file from the `.env.tempalate` to store local configuration options. This is a one-time operation on first setup:
+You need to clone a new `.env` file from the `.env.tempalate` to store local configuration options. This is a one-time operation on first setup:
 
 ```bash
 $ cp .env.template .env  # (first time only)
@@ -35,12 +18,18 @@ The `.env` file is used by flask to set environment variables when running `flas
 
 ## Running the App
 
-Once the all dependencies have been installed, start the Flask app in development mode within the poetry environment by running:
+To start the vagrant virtual machine by running:
 ```bash
-$ poetry run flask run
+$ vagrant up
 ```
 
-You should see output similar to the following:
+Alternatively you can start the app on your own machine with poetry by running:
+```bash
+$ poetry install
+$ poetry run flask run
+``` 
+
+After the project dependancies are installed, you should see output similar to the following:
 ```bash
  * Serving Flask app "app" (lazy loading)
  * Environment: development
