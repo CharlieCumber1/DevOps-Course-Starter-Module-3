@@ -20,8 +20,14 @@ The `.env` file is used by flask to set environment variables when running `flas
 
 To start the vagrant virtual machine by running:
 ```bash
-$ vagrant up --provision
+$ vagrant up
 ```
+
+Alternatively you can start the app on your own machine with poetry by running:
+```bash
+$ poetry install
+$ poetry run flask run
+``` 
 
 After the project dependancies are installed, you should see output similar to the following:
 ```bash
