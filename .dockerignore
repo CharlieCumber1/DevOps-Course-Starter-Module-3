@@ -1,0 +1,15 @@
+__pycache__
+.pytest_cache
+.vagrant
+.vscode
+.env
+.env.template
+e2e_tests
+tests
+.env.test
+.gitignore
+app.log
+Dockerfile
+geckodriver.exe
+geckodriver.log
+Vagrantfile
