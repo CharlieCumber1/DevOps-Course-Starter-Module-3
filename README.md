@@ -4,8 +4,8 @@
 
 The project uses vagrant to create an isolated application environment within a virtual machine. To prepare your system, ensure you have an official distribution of Python version 3.7+ and install vagrant by following the [instructions here]('https://learn.hashicorp.com/tutorials/vagrant/getting-started-install). Addtitionaly you will need a provider such as [VirtualBox]('https://www.virtualbox.org/) or [Hyper-V]('https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v) installed.
 
-## Configuration
 
+## Configuration
 
 You need to clone a new `.env` file from the `.env.tempalate` to store local configuration options. This is a one-time operation on first setup:
 
@@ -18,16 +18,39 @@ The `.env` file is used by flask to set environment variables when running `flas
 
 ## Running the App
 
-To start the vagrant virtual machine by running:
+### Option 1: Docker
+
+Docker compose configurations are provided for both production and development modes. The production configuration uses Gunicorn, while the development configuration uses Flask development server which has the additional benifit of hot reloading.
+
+To start the application within a docker container by running either:
+
+```bash
+# Production Mode
+$ docker-compose up
+```
+```bash
+# Development Mode
+$ docker-compose -f docker-compose.development.yml up
+```
+
+
+### Option 2: Vagrant
+
+To start the application in a vagrant virtual machine by running:
 ```bash
 $ vagrant up
 ```
 
+
+### Option 3: Poetry 
 Alternatively you can start the app on your own machine with poetry by running:
 ```bash
 $ poetry install
 $ poetry run flask run
 ``` 
+
+
+### Accessing the application:
 
 After the project dependancies are installed, you should see output similar to the following:
 ```bash
@@ -39,6 +62,7 @@ After the project dependancies are installed, you should see output similar to t
  * Debugger is active!
  * Debugger PIN: 226-556-590
 ```
+
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
 
 

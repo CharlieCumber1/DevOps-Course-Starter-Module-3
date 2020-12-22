@@ -125,3 +125,5 @@ geckodriver.exe
 
 ### vagrant
 .vagrant
+
+app.log
