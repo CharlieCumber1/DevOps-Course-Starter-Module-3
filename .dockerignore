@@ -4,6 +4,7 @@ __pycache__
 .vscode
 .env
 .env.template
+.git
 e2e_tests
 tests
 .env.test
