@@ -1,2 +1,4 @@
 script:
-- echo "hello world"
+- docker build --target test --tag todo-app:test .
+- docker run todo-app:test tests
+- docker run --env-file .env todo-app:test e2e_tests
