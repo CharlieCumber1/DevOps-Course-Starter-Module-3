@@ -68,11 +68,26 @@ Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser
 
 ## Testing
 
-The end to end tests require you have the firefox browser installed and that you download the corresponding version of the Geckodriver (check version compatability [`here`](https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html)):
-* Download and install firefox from [`here`](https://www.mozilla.org/en-US/firefox/download/)
-* Download Geckodriver from [`here`](https://github.com/mozilla/geckodriver/releases) and add the executable file to the root of the project.
+### Option 1: Poetry
+The end to end tests require you have the Chrome browser installed and that you download the corresponding version of the ChromeDriver:
+* Download and install Chrome from [`here`](https://www.google.co.uk/chrome/)
+* Download ChromeDriver from [`here`](https://sites.google.com/a/chromium.org/chromedriver/downloads) and add the executable file to the root of the project.
 
 Once the test setup requirments are completed, execute the tests by running:
 ```bash
 $ poetry run pytest
+```
+
+### Option 2: Docker
+To build the docker image by running:
+```bash
+$ docker build --target test --tag todo-app:test .
+```
+To execute the unit and integration tests by running:
+```bash
+$ docker run todo-app:test tests
+```
+To execute the E2E tests by running:
+```bash
+$ docker run --env-file .env todo-app:test e2e_tests
 ```
