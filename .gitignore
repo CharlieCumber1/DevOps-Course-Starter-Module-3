@@ -119,9 +119,8 @@ env/
 ### Configuration files ###
 .env
 
-### Geckodriver for selenium webdriver ###
-geckodriver.log
-geckodriver.exe
+### Chromedriver for selenium webdriver ###
+chromedriver.exe
 
 ### vagrant
 .vagrant
