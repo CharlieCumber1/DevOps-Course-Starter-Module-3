@@ -1,24 +1,13 @@
-branches:
-  only:
-  - main
-
 script:
 - docker build --target test --tag todo-app:test .
 - docker run todo-app:test tests
 - docker run -e TRELLO_API_KEY -e TRELLO_API_SECRET todo-app:test e2e_tests
 
-after_success:
-- docker build --target production --tag todo-app .
-- docker image tag todo-app "${DOCKER_USERNAME}/todo-app:latest"
-- docker image tag todo-app "${DOCKER_USERNAME}/todo-app:${TRAVIS_COMMIT}"
-- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-- docker push "${DOCKER_USERNAME}/todo-app:latest"
-- docker push "${DOCKER_USERNAME}/todo-app:${TRAVIS_COMMIT}"
-- docker pull "${DOCKER_USERNAME}/todo-app:latest"
-- docker tag "${DOCKER_USERNAME}/todo-app:latest" registry.heroku.com/todo-cc/web
-- echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
-- docker push registry.heroku.com/todo-cc/web
-- heroku container:release web -a todo-cc
+deploy:
+  provider: script
+  script: bash deploy.sh
+  on:
+    branch: main
 
 env:
   global:
