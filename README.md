@@ -22,7 +22,7 @@ The `.env` file is used by flask to set environment variables when running `flas
 
 Docker compose configurations are provided for both production and development modes. The production configuration uses Gunicorn, while the development configuration uses Flask development server which has the additional benifit of hot reloading.
 
-To start the application within a docker container by running either:
+To start the application within a docker container, firstly ensure you have docker desktop installed and running, then you can run either command from your terminal:
 
 ```bash
 # Production Mode

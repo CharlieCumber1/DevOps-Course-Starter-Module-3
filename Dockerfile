@@ -5,13 +5,14 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY poetry.lock pyproject.toml /app/
-RUN poetry install --no-root --no-dev
+RUN poetry config virtualenvs.create false --local && poetry install --no-root --no-dev
 
 COPY . /app/
 
 FROM base as production
 ENV FLASK_ENV=production
-ENTRYPOINT ["poetry", "run", "gunicorn", "todo_app.app:create_app()", "--bind", "0.0.0.0:5000"]
+ENV PORT=5000
+CMD gunicorn --bind 0.0.0.0:${PORT} 'todo_app.app:create_app()'
 
 FROM base as development
 ENTRYPOINT ["poetry", "run", "flask", "run", "--host", "0.0.0.0"]
