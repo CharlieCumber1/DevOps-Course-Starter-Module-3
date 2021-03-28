@@ -6,7 +6,7 @@ from bson.objectid import ObjectId
 
 class MongoDB:
     def __init__(self):
-        self.client = pymongo.MongoClient(f"mongodb+srv://{os.getenv('MONGODB_USERNAME')}:{os.getenv('MONGODB_PASSWORD')}@cluster0.illz4.mongodb.net/{os.getenv('MONGODB_DATABASE_NAME')}?retryWrites=true&w=majority")
+        self.client = pymongo.MongoClient(os.getenv('MONGODB_CONNECTION_STRING'))
         self.db = self.client.get_default_database()
         self.collection = self.db['Tasks']
 
