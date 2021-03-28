@@ -12,7 +12,7 @@ def test_app():
     # Create the new board & update the board id environment variable
     file_path = find_dotenv('.env')
     load_dotenv(file_path, override=True)
-
+    os.environ['LOGIN_DISABLED'] = "TRUE"
     os.environ['MONGODB_DATABASE_NAME'] = 'e2e-test-database'
     database = MongoDB()
     database.delete_current_database()
