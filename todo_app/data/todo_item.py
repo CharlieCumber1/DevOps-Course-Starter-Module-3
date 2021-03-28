@@ -9,14 +9,5 @@ class Item:
         self.editDatetime = editDatetime
 
     @classmethod
-    def fromTrelloCard(cls, card, list):
-        return cls(card['id'], card['name'], parse(card['dateLastActivity']), list['name'])
-
-    def reset(self):
-        self.status = 'To Do'
-
-    def start(self):
-        self.status = 'Doing'
-
-    def complete(self):
-        self.status = 'Done'
+    def fromMongoDb(cls, object, status):
+        return cls(object['_id'], object['name'], object['dateLastActivity'], status)
