@@ -1,12 +1,24 @@
 import os
 from flask import Flask, render_template, redirect, url_for, request
+from functools import wraps
 import requests
-from flask_login import LoginManager, login_required, UserMixin, login_user
+from flask_login import LoginManager, login_required, UserMixin, login_user, current_user
 from oauthlib.oauth2 import WebApplicationClient
 
 from todo_app.data.mongodb import MongoDB
 from todo_app.user import User
 from todo_app.view_model import ViewModel
+
+def writer_required(f):
+    @login_required
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        user = User(current_user.id)
+        if not user.is_writer():
+            flash("You do not have permisions to perform this action")
+            return None
+        return f(*args, **kwargs)
+    return decorated_function
 
 def create_app():
     app = Flask(__name__)
@@ -50,9 +62,10 @@ def create_app():
     @app.route('/')
     @login_required
     def index():
+        user = User(current_user.id)
         items = database.get_items()
         view_model_items = ViewModel(items)
-        return render_template('index.html', items = view_model_items)
+        return render_template('index.html', items = view_model_items, read_only = not user.is_writer())
 
 
     @app.route('/items/new', methods=['POST'])
@@ -71,21 +84,21 @@ def create_app():
 
 
     @app.route('/items/<id>/complete')
-    @login_required
+    @writer_required
     def complete_item(id):
         database.complete_item(id)
         return redirect(url_for('index'))
 
 
     @app.route('/items/<id>/uncomplete')
-    @login_required
+    @writer_required
     def uncomplete_item(id):
         database.uncomplete_item(id)
         return redirect(url_for('index')) 
 
 
     @app.route('/items/<id>/delete')
-    @login_required
+    @writer_required
     def delete_item(id):
         database.delete_item(id)
         return redirect(url_for('index'))

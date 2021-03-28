@@ -6,6 +6,14 @@ import pytest
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from dotenv import load_dotenv, find_dotenv
+from flask_login import login_user
+from todo_app.user import User
+
+def stub_get_user(*args, **kwargs):
+    return User("test-user")
+
+def stub_user_is_writer(*args, **kwargs):
+    return True
 
 @pytest.fixture(scope='module')
 def test_app():
@@ -41,12 +49,17 @@ def driver():
         yield driver
 
 
-def test_page_loads(driver, test_app):
+def test_page_loads(monkeypatch, driver, test_app):
+    monkeypatch.setattr('flask_login.utils._get_user', stub_get_user)
+
     driver.get('http://localhost:5000/')
     assert driver.title == 'To-Do App'
 
 
-def test_task_journey(driver, test_app):
+def test_task_journey(monkeypatch, driver, test_app):
+    monkeypatch.setattr('flask_login.utils._get_user', stub_get_user)
+    monkeypatch.setattr('todo_app.user.User.is_writer', stub_user_is_writer)
+
     driver.get('http://localhost:5000/')
     task_name_input = driver.find_element_by_id('name-input')
     submit_button = driver.find_element_by_id('add-new-task-button')
