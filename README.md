@@ -23,6 +23,11 @@ You will need to create an OAuth app under a GitHub account. Follow the instruct
 - Authorization callback URL = "http://localhost:5000/auth/authorize"
 You will be provided with a "Client Id" upon creating the application, you need to set the AUTH_CLIENT_ID variable in your .env file to this value. From the app managment page you will see an option to "Generate a new client secret", you should do so and set AUTH_CLIENT_SECRET in the .env file to it's value.
 
+### Run the database locally
+```bash
+$ docker run --name to-do-database -p 27017:27017 -d mongo
+```
+
 ## Running the App
 
 ### Option 1: Docker
@@ -98,3 +103,9 @@ To execute the E2E tests by running:
 ```bash
 $ docker run --env-file .env todo-app:test e2e_tests
 ```
+
+# Deploying the application
+
+The application is deployed with azure and is accessible at https://charlie-devops-to-do.azurewebsites.net/
+
+New deployments are automatically triggered when commits are made to the main branch.
