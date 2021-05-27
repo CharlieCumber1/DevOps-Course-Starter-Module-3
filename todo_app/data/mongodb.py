@@ -7,11 +7,11 @@ from bson.objectid import ObjectId
 class MongoDB:
     def __init__(self):
         self.client = pymongo.MongoClient(os.getenv('MONGODB_CONNECTION_STRING'))
-        self.db = self.client.get_default_database()
+        self.db = self.client[os.getenv('MONGODB_DATABASE_NAME')]
         self.collection = self.db['Tasks']
 
     def delete_current_database(self):
-        self.client.drop_database(self.db)
+        self.collection.drop()
 
     def get_items(self):
         return [Item.fromMongoDb(item) for item in self.collection.find()]
