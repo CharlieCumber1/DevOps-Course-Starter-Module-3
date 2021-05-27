@@ -1,8 +1,8 @@
 import os
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, abort
 from functools import wraps
 import requests
-from flask_login import LoginManager, login_required, UserMixin, login_user, current_user
+from flask_login import LoginManager, login_required, login_user, current_user
 from oauthlib.oauth2 import WebApplicationClient
 
 from todo_app.data.mongodb import MongoDB
@@ -15,8 +15,7 @@ def writer_required(f):
     def decorated_function(*args, **kwargs):
         user = User(current_user.id)
         if not user.is_writer():
-            flash("You do not have permisions to perform this action")
-            return None
+            abort(401, "Permission Denied")
         return f(*args, **kwargs)
     return decorated_function
 
@@ -69,7 +68,7 @@ def create_app():
 
 
     @app.route('/items/new', methods=['POST'])
-    @login_required
+    @writer_required
     def add_item():
         name = request.form['name']
         database.add_item(name)
@@ -77,7 +76,7 @@ def create_app():
 
 
     @app.route('/items/<id>/start')
-    @login_required
+    @writer_required
     def start_item(id):
         database.start_item(id)
         return redirect(url_for('index')) 
