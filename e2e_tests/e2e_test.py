@@ -1,6 +1,6 @@
 import os
 from todo_app import app
-import todo_app.data.trello_items as trello
+from todo_app.data.mongodb import MongoDB
 from threading import Thread
 import pytest
 from selenium import webdriver
@@ -13,8 +13,9 @@ def test_app():
     file_path = find_dotenv('.env')
     load_dotenv(file_path, override=True)
 
-    board_id = trello.create_board('e2e-test-board')
-    os.environ['TRELLO_BOARD_ID'] = board_id
+    os.environ['MONGODB_DATABASE_NAME'] = 'e2e-test-database'
+    database = MongoDB()
+    database.delete_current_database()
 
     # construct the new application
     application = app.create_app()
@@ -27,7 +28,7 @@ def test_app():
 
     # Tear Down
     thread.join(1)
-    trello.delete_board(board_id)
+    database.delete_current_database()
 
 
 @pytest.fixture(scope="module")
