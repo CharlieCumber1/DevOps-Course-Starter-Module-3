@@ -1,13 +1,10 @@
-from dateutil.parser import parse
-
 class Item:
-
-    def __init__(self, id, name, editDatetime, status = 'To Do'):
+    def __init__(self, id, name, editDatetime, status):
         self.id = id
         self.name = name
         self.status = status
         self.editDatetime = editDatetime
 
     @classmethod
-    def fromMongoDb(cls, object, status):
-        return cls(object['_id'], object['name'], object['dateLastActivity'], status)
+    def fromMongoDb(cls, object):
+        return cls(object['_id'], object['name'], object['dateLastActivity'], object['status'])
