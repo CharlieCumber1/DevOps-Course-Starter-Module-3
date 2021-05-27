@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, redirect, url_for, request, abort
+from flask import Flask, app, render_template, redirect, url_for, request, abort
 from functools import wraps
 import requests
 from flask_login import LoginManager, login_required, login_user, current_user
@@ -9,15 +9,6 @@ from todo_app.data.mongodb import MongoDB
 from todo_app.user import User
 from todo_app.view_model import ViewModel
 
-def writer_required(f):
-    @login_required
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        user = User(current_user.id)
-        if not user.is_writer():
-            abort(401, "Permission Denied")
-        return f(*args, **kwargs)
-    return decorated_function
 
 def create_app():
     app = Flask(__name__)
@@ -57,6 +48,16 @@ def create_app():
         user = User(user_name)
         login_user(user)
         return redirect(url_for('index'))
+
+    def writer_required(f):
+        @login_required
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            user = User(current_user.id)
+            if not user.is_writer() and not app.config.get('LOGIN_DISABLED'):
+                abort(401, "Permission Denied")
+            return f(*args, **kwargs)
+        return decorated_function
 
     @app.route('/')
     @login_required

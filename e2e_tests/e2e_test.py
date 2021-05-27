@@ -20,7 +20,7 @@ def test_app():
     # Create the new board & update the board id environment variable
     file_path = find_dotenv('.env')
     load_dotenv(file_path, override=True)
-    os.environ['LOGIN_DISABLED'] = "TRUE"
+    os.environ['LOGIN_DISABLED'] = "True"
     os.environ['MONGODB_DATABASE_NAME'] = 'e2e-test-database'
     database = MongoDB()
     database.delete_current_database()
@@ -68,25 +68,25 @@ def test_task_journey(monkeypatch, driver, test_app):
     task_name_input.send_keys(task_title)
     submit_button.click()
 
-    assert check_task_exists_with_status(driver, task_title, 'To do')
+    assert check_task_exists_with_status(driver, task_title, 'To Do')
     assert not check_task_exists_with_status(driver, task_title, 'Doing')
     assert not check_task_exists_with_status(driver, task_title, 'Done')
     
     start_task_button = get_button_with_text_for_task(driver, task_title, 'Start')
     start_task_button.click()
-    assert not check_task_exists_with_status(driver, task_title, 'To do')
+    assert not check_task_exists_with_status(driver, task_title, 'To Do')
     assert check_task_exists_with_status(driver, task_title, 'Doing')
     assert not check_task_exists_with_status(driver, task_title, 'Done')
 
     complete_task_button = get_button_with_text_for_task(driver, task_title, 'Complete')
     complete_task_button.click()
-    assert not check_task_exists_with_status(driver, task_title, 'To do')
+    assert not check_task_exists_with_status(driver, task_title, 'To Do')
     assert not check_task_exists_with_status(driver, task_title, 'Doing')
     assert check_task_exists_with_status(driver, task_title, 'Done')
 
     delete_task_button = get_button_with_text_for_task(driver, task_title, 'Delete')
     delete_task_button.click()
-    assert not check_task_exists_with_status(driver, task_title, 'To do')
+    assert not check_task_exists_with_status(driver, task_title, 'To Do')
     assert not check_task_exists_with_status(driver, task_title, 'Doing')
     assert not check_task_exists_with_status(driver, task_title, 'Done')
 
