@@ -6,13 +6,21 @@ import pytest
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from dotenv import load_dotenv, find_dotenv
+from flask_login import login_user
+from todo_app.user import User
+
+def stub_get_user(*args, **kwargs):
+    return User("test-user")
+
+def stub_user_is_writer(*args, **kwargs):
+    return True
 
 @pytest.fixture(scope='module')
 def test_app():
     # Create the new board & update the board id environment variable
     file_path = find_dotenv('.env')
     load_dotenv(file_path, override=True)
-
+    os.environ['LOGIN_DISABLED'] = "True"
     os.environ['MONGODB_DATABASE_NAME'] = 'e2e-test-database'
     database = MongoDB()
     database.delete_current_database()
@@ -41,12 +49,17 @@ def driver():
         yield driver
 
 
-def test_page_loads(driver, test_app):
+def test_page_loads(monkeypatch, driver, test_app):
+    monkeypatch.setattr('flask_login.utils._get_user', stub_get_user)
+
     driver.get('http://localhost:5000/')
     assert driver.title == 'To-Do App'
 
 
-def test_task_journey(driver, test_app):
+def test_task_journey(monkeypatch, driver, test_app):
+    monkeypatch.setattr('flask_login.utils._get_user', stub_get_user)
+    monkeypatch.setattr('todo_app.user.User.is_writer', stub_user_is_writer)
+
     driver.get('http://localhost:5000/')
     task_name_input = driver.find_element_by_id('name-input')
     submit_button = driver.find_element_by_id('add-new-task-button')
@@ -55,25 +68,25 @@ def test_task_journey(driver, test_app):
     task_name_input.send_keys(task_title)
     submit_button.click()
 
-    assert check_task_exists_with_status(driver, task_title, 'To do')
+    assert check_task_exists_with_status(driver, task_title, 'To Do')
     assert not check_task_exists_with_status(driver, task_title, 'Doing')
     assert not check_task_exists_with_status(driver, task_title, 'Done')
     
     start_task_button = get_button_with_text_for_task(driver, task_title, 'Start')
     start_task_button.click()
-    assert not check_task_exists_with_status(driver, task_title, 'To do')
+    assert not check_task_exists_with_status(driver, task_title, 'To Do')
     assert check_task_exists_with_status(driver, task_title, 'Doing')
     assert not check_task_exists_with_status(driver, task_title, 'Done')
 
     complete_task_button = get_button_with_text_for_task(driver, task_title, 'Complete')
     complete_task_button.click()
-    assert not check_task_exists_with_status(driver, task_title, 'To do')
+    assert not check_task_exists_with_status(driver, task_title, 'To Do')
     assert not check_task_exists_with_status(driver, task_title, 'Doing')
     assert check_task_exists_with_status(driver, task_title, 'Done')
 
     delete_task_button = get_button_with_text_for_task(driver, task_title, 'Delete')
     delete_task_button.click()
-    assert not check_task_exists_with_status(driver, task_title, 'To do')
+    assert not check_task_exists_with_status(driver, task_title, 'To Do')
     assert not check_task_exists_with_status(driver, task_title, 'Doing')
     assert not check_task_exists_with_status(driver, task_title, 'Done')
 

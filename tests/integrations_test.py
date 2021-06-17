@@ -3,6 +3,7 @@ from os import environ
 from dotenv import load_dotenv, find_dotenv
 from todo_app import app
 from todo_app.data.todo_item import Item
+from todo_app.user import User
 import requests
 
 @pytest.fixture
@@ -18,6 +19,9 @@ def client():
 
 def stub_mongodb():
     return
+
+def stub_get_user(*args, **kwargs):
+    return User("test-user")
 
 def stub_get_all_items(self):
     return [
@@ -38,6 +42,7 @@ def stub_get_all_items(self):
 def test_index_page(monkeypatch, client):
     monkeypatch.setattr('todo_app.data.mongodb.pymongo.MongoClient', stub_mongodb)
     monkeypatch.setattr('todo_app.data.mongodb.MongoDB.get_items', stub_get_all_items)
+    monkeypatch.setattr('flask_login.utils._get_user', stub_get_user)
 
     response = client.get('/')
 
