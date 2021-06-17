@@ -6,12 +6,11 @@ from bson.objectid import ObjectId
 
 class MongoDB:
     def __init__(self):
-        self.client = pymongo.MongoClient(f"mongodb+srv://{os.getenv('MONGODB_USERNAME')}:{os.getenv('MONGODB_PASSWORD')}@cluster0.illz4.mongodb.net/{os.getenv('MONGODB_DATABASE_NAME')}?retryWrites=true&w=majority")
-        self.db = self.client.get_default_database()
-        self.collection = self.db['Tasks']
+        self.client = pymongo.MongoClient(f"{os.getenv('MONGODB_CONNECTION_STRING')}/{os.getenv('MONGODB_DATABASE_NAME')}?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000")
+        self.collection = self.client.db['Tasks']
 
     def delete_current_database(self):
-        self.client.drop_database(self.db)
+        self.collection.drop()
 
     def get_items(self):
         return [Item.fromMongoDb(item) for item in self.collection.find()]
