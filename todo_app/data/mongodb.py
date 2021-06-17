@@ -6,9 +6,8 @@ from bson.objectid import ObjectId
 
 class MongoDB:
     def __init__(self):
-        self.client = pymongo.MongoClient(os.getenv('MONGODB_CONNECTION_STRING'))
-        self.db = self.client[os.getenv('MONGODB_DATABASE_NAME')]
-        self.collection = self.db['Tasks']
+        self.client = pymongo.MongoClient(f"{os.getenv('MONGODB_CONNECTION_STRING')}/{os.getenv('MONGODB_DATABASE_NAME')}?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000")
+        self.collection = self.client.db['Tasks']
 
     def delete_current_database(self):
         self.collection.drop()
