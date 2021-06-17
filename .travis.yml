@@ -6,7 +6,7 @@ deploy:
   provider: script
   script: bash deploy.sh
   on:
-    branch: module-11
+    branch: main
 env:
   global:
   - DOCKER_USERNAME=charliecumber
