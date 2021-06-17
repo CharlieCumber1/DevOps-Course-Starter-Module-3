@@ -5,7 +5,9 @@
 The project uses vagrant to create an isolated application environment within a virtual machine. To prepare your system, ensure you have an official distribution of Python version 3.7+ and install vagrant by following the [instructions here]('https://learn.hashicorp.com/tutorials/vagrant/getting-started-install). Addtitionaly you will need a provider such as [VirtualBox]('https://www.virtualbox.org/) or [Hyper-V]('https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/quick-start/enable-hyper-v) installed.
 
 
-## Configuration
+## Set up
+
+### Configuration variables
 
 You need to clone a new `.env` file from the `.env.tempalate` to store local configuration options. This is a one-time operation on first setup:
 
@@ -15,6 +17,11 @@ $ cp .env.template .env  # (first time only)
 
 The `.env` file is used by flask to set environment variables when running `flask run`. This enables things like development mode (which also enables features like hot reloading when you make a file change). There's also a [SECRET_KEY](https://flask.palletsprojects.com/en/1.1.x/config/#SECRET_KEY) variable which is used to encrypt the flask session cookie.
 
+### GitHub Authentication (OAuth) for local
+You will need to create an OAuth app under a GitHub account. Follow the instructions ['here']('https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app'). You will need to provide the following values:
+- Homepage URL = "http://localhost:5000/"
+- Authorization callback URL = "http://localhost:5000/auth/authorize"
+You will be provided with a "Client Id" upon creating the application, you need to set the AUTH_CLIENT_ID variable in your .env file to this value. From the app managment page you will see an option to "Generate a new client secret", you should do so and set AUTH_CLIENT_SECRET in the .env file to it's value.
 
 ## Running the App
 
