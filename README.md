@@ -106,6 +106,6 @@ $ docker run --env-file .env todo-app:test e2e_tests
 
 # Deploying the application
 
-The application is deployed with azure and is accessible at https://charlie-devops-to-do.azurewebsites.net/
+The application is deployed with azure and is accessible at https://prod-charlie-devops-to-do.azurewebsites.net/
 
 New deployments are automatically triggered when commits are made to the main branch.
